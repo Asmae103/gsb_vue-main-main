@@ -12,7 +12,7 @@ function Fiche(){
     return(
         <h1> Fiche Formulaire</h1>
     )
-    
+    /*CC*/
 }
 /**
  * Composant Rapports Medecin, qui prend en props idMedecin ,
