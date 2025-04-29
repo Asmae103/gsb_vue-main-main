@@ -1,12 +1,16 @@
-import { useState  } from "react";
-import {useOutletContext} from "react-router-dom";
+import { useState, useRef} from "react";
+import {useOutletContext, useNavigate,useParams} from "react-router-dom";
 import Medecins from "../pages/accueil/Medecins";
 import api from '../api/api.jsx';
 
-
 export default function FicheMedecin(){
+  const { id } = useParams();
   const[medecins, setMedecins]= useOutletContext(); 
   const [affichage, setAffichage]= useState('Fiche'); //choix de l'affichage par default
+  const [error, setError] = useState(false);
+  const [erMessage, setErMessage] = useState('');
+  const navigate = useNavigate();
+  const flag = useRef;
  // const medecinsTrouves = await api.get('/medecins?nom='+valeursaisie); 
  /*if (!Array.isArray(medecins)) {
   return <p>Chargement des médecins...</p>;
@@ -29,11 +33,13 @@ function Fiche({leMedecin}){
    * @param {*} e
    */
   function updatemedecin(e) {
-    try{
-
-    }catch(e){
-
-    }
+    const { name , value} = e.target;
+    setMedecin( prev => ({
+      ...prev,
+      [name]: value
+    })
+      
+    )
   }
   /**
    * Appel à l'api mettre à jour le medecin dans la base
@@ -41,53 +47,68 @@ function Fiche({leMedecin}){
    * @param {JSON}params
    * @returns Promesse Axios
    */
-  async function sendUpdateMedecin(params){
+ /// async function sendUpdateMedecin(params){
+  async function sendUpdateMedecin(e){
+
+    e.preventDefault();
+    try{
+     // const response = await api.put(`/medecins/${params.id}`, params);
+     console.log(id);
+     //const response = await api.put(`/medecins/`+id);
+     const response = await api.put(`/majMedecin`, medecin);
+
+     console.log("Réponse de l'API", response);
+      console.log("mise à jour réussie", response.data);
+     
+      return response;
+    }catch(e){
+      console.log("Erreur pour la mise à jour ", e) ;
+    }
+         
 
   }
   
   return(
     /*<h1> Fiche Formulaire</h1>*/
     <>
-     
+     <form  onSubmit={sendUpdateMedecin}>
       <ul>
         <li>
-          <label type ="text" id="nom">Nom: </label><br/>
-          <input type="text" id="nom" value = {medecins.nom} style={{   border: '1px solid #919191',
+          <label type ="text" name ="nom"id="nom">Nom: </label><br/>
+          <input type="text" name="nom" value={medecin.nom} onChange={updatemedecin} />
+         
+        </li>
+        <li>
+          <label name ="prenom" type ="text" id="prenom">Prenom: </label><br/>
+          <input name ="prenom" type="text" id="prenom" defaultValue ={medecin.prenom} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>
-          <label type ="text" id="prenom">Prenom: </label><br/>
-          <input type="text" id="prenom" value ={medecins.prenom} style={{   border: '1px solid #919191',
-            borderRadius: '6px', width: '100%'}}/>
-        </li>
-        <li>
-          <label type ="text" id="adresse">Adresse: </label><br/>
-          <input type="text" id="adresse" value ={medecins.adresse} style={{   border: '1px solid #919191',
+          <label name ="adresse" type ="text" id="adresse">Adresse: </label><br/>
+          <input name ="adresse" type="text" id="adresse" defaultValue ={medecin.adresse} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>
           <label type ="text" id="tel">Tel: </label><br/>
-          <input type="text" id="tel" value ={medecins.tel} style={{   border: '1px solid #919191',
+          <input type="text" id="tel" defaultValue ={medecin.tel} onChange ={ updatemedecin}style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>
           <label type ="text" id="specialitecomplementaire">specialitecomplementaire: </label><br/>
-          <input type="text" id="specialitecomplementaire"  value ={medecins.specialitecomplementaire}  onChange={(e) =>
-    setMedecins({
-      ...medecins,
-      specialitecomplementaire: e.target.value
-    })
-  } style={{   border: '1px solid #919191',
+          <input type="text" id="specialitecomplementaire"  value ={medecin.specialitecomplementaire} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>
           <label type ="text" id="departement">departement: </label><br/>
-          <input type="text" id="departement" value ={medecins.departement} style={{   border: '1px solid #919191',
+          <input type="number" id="departement" defaultValue={medecin.departement} onChange ={ updatemedecin}
+           style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
       </ul><br/>
-      <button style ={{width: 'auto', backgroundColor:'rgb(29 78 216)', color:'#fff'}}>Mettre à jour </button>
+      <button type = "submit" style ={{width: 'auto', backgroundColor:'rgb(29 78 216)', color:'#fff'}}>Mettre à jour </button>
+      </form>
       </>
+    
   )
 }
 //defaultValue ={medecins.specialitecomplementaire} readOnly
@@ -154,3 +175,6 @@ return(
   </>
 );
 }
+
+/* <input type="text" name ="nom" id="nom" defaultValue = {medecin.nom} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
+borderRadius: '6px', width: '100%'}}/>*/
