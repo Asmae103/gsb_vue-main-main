@@ -46,11 +46,7 @@ function Medecins() {
       try {
          console.log("Recherche en cours pour :", valeursaisie);
          const response = await api.get('/medecins?nom=' + valeursaisie); //// Appel à l'API pour récupérer les médecins
-         /* const medecinsTrouves = await api.get('/medecins?nom='+valeursaisie,{
-             params: {
-                nomMedecin: lenomMedecin
-            }
-          }); //// Appel à l'API pour récupérer les médecins*/
+       
          return response;
 
       }

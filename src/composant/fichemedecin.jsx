@@ -1,4 +1,4 @@
-import { useState, useRef} from "react";
+import { useState, useEffect, Component} from "react";
 import {useOutletContext, useNavigate,useParams} from "react-router-dom";
 import Medecins from "../pages/accueil/Medecins";
 import api from '../api/api.jsx';
@@ -8,9 +8,10 @@ export default function FicheMedecin(){
   const[medecins, setMedecins]= useOutletContext(); 
   const [affichage, setAffichage]= useState('Fiche'); //choix de l'affichage par default
   const [error, setError] = useState(false);
-  const [erMessage, setErMessage] = useState('');
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const flag = useRef;
+  
+
  // const medecinsTrouves = await api.get('/medecins?nom='+valeursaisie); 
  /*if (!Array.isArray(medecins)) {
   return <p>Chargement des médecins...</p>;
@@ -36,7 +37,9 @@ function Fiche({leMedecin}){
     const { name , value} = e.target;
     setMedecin( prev => ({
       ...prev,
-      [name]: value
+     [name]: value
+
+     //  [ name ]: name === 'departement' ? parseInt(value) : value
     })
       
     )
@@ -55,16 +58,16 @@ function Fiche({leMedecin}){
      // const response = await api.put(`/medecins/${params.id}`, params);
      console.log(id);
      //const response = await api.put(`/medecins/`+id);
-     const response = await api.put(`/majMedecin`, medecin);
+     const response = await api.put(`/majMedecin`, medecin); //modifier le formulaire 
 
-     console.log("Réponse de l'API", response);
-      console.log("mise à jour réussie", response.data);
-     
+     setMessage("Mise à jour réussie");
+     console.log("FicheMedecin > medecins:", medecins); // dans FicheMedecin
+    console.log("Fiche > medecin:", medecin);  
       return response;
     }catch(e){
       console.log("Erreur pour la mise à jour ", e) ;
     }
-         
+    
 
   }
   
@@ -73,9 +76,15 @@ function Fiche({leMedecin}){
     <>
      <form  onSubmit={sendUpdateMedecin}>
       <ul>
+        {message && (
+          <div id= "bmaj">
+            <p>{message}</p>
+          </div>
+        )}
         <li>
           <label type ="text" name ="nom"id="nom">Nom: </label><br/>
-          <input type="text" name="nom" value={medecin.nom} onChange={updatemedecin} />
+          <input type="text" name="nom" defaultValue={medecin.nom} onChange={updatemedecin} style={{   border: '1px solid #919191',
+            borderRadius: '6px', width: '100%'}} />
          
         </li>
         <li>
@@ -89,18 +98,18 @@ function Fiche({leMedecin}){
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>
-          <label type ="text" id="tel">Tel: </label><br/>
-          <input type="text" id="tel" defaultValue ={medecin.tel} onChange ={ updatemedecin}style={{   border: '1px solid #919191',
+          <label  name ="tel" type ="text" id="tel">Tel: </label><br/>
+          <input  name ="tel" type="text" id="tel" defaultValue ={medecin.tel} onChange ={ updatemedecin}style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>
-          <label type ="text" id="specialitecomplementaire">specialitecomplementaire: </label><br/>
-          <input type="text" id="specialitecomplementaire"  value ={medecin.specialitecomplementaire} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
+          <label name ="specialitecomplementaire" type ="text" id="specialitecomplementaire">specialitecomplementaire: </label><br/>
+          <input name ="specialitecomplementaire" type="text" id="specialitecomplementaire"  value ={medecin.specialitecomplementaire|| ''} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>
-          <label type ="text" id="departement">departement: </label><br/>
-          <input type="number" id="departement" defaultValue={medecin.departement} onChange ={ updatemedecin}
+          <label  name ="departement" type ="text" id="departement">departement: </label><br/>
+          <input name ="departement" type="number" id="departement" defaultValue={medecin.departement} onChange ={ updatemedecin}
            style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
@@ -123,21 +132,63 @@ function Fiche({leMedecin}){
 */
 function Rapports ({idMedecin}){
   const [rapportsMedecin, setRapportsMedecin] = useState([]);
+  const lisItems= rapportsMedecin.map((rapport)=>
+    <li>{rapport}</li>
+);
   /**
    * Utilisation du hook useEffect : Appel à l'API via la methode GET 
    * DES LE CHARGEMENT /RAFRAICHISSEMENT du composent 
    * cette synchronisation via dependre de idMedecin
    * URL API: '/rapports/'+idMedecin'
    */
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() =>{
+    setIsLoading(true);
     async function rapports(){
-      
+      try{
+        const response = await api.get('/rapports/'+idMedecin);
+        setRapportsMedecin(response.data);
+        console.log("Rapports",response.data);
+      }catch (error) {
+        console.error("Erreur lors du chargement des rapports", error);
+      } finally {
+        setIsLoading(false);  // Fin du chargement
+      }
+     
     }
     rapports();
   },[idMedecin])
   return(
-      <h1>Fiche Rappports </h1>
-  )
+   //   <h1>Fiche Rappports </h1>
+
+// Affichage conditionnel : si les données sont en cours de chargement, afficher un message
+// Sinon, afficher la table contenant la liste des rapports du médecin
+   isLoading ? (
+    <p>Chargement des rapports</p>
+  ) : (
+   <table className="table">
+   
+          <thead>
+            <tr >
+              <th scope="col">DATE</th>
+              <th scope="col">MOTIF</th>
+              <th scope="col">BILAN</th>
+              <th scope="col">VISITEUR</th>
+            </tr>
+          </thead>
+          <tbody>
+          {rapportsMedecin.map((rapport,index)=>(
+            <tr key ={index}>
+              <td> {new Date(rapport.date).toLocaleDateString()} </td>
+              <td>{rapport.motif}</td>
+              <td>{rapport.bilan}</td>
+              <td>{rapport.nom} {rapport.prenom}</td>
+            </tr>
+    ) )}
+   </tbody>
+ </table>
+)
+  );
 }
 return(
   <>
@@ -178,3 +229,6 @@ return(
 
 /* <input type="text" name ="nom" id="nom" defaultValue = {medecin.nom} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
 borderRadius: '6px', width: '100%'}}/>*/
+
+
+//
