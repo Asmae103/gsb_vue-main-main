@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation, useOutletContext, Link, Outlet} from 'react-router-dom'
 import AjouterRapport from '../../composant/Rappoort/AjouterRapport.jsx'
+import AjouterRapport2 from '../../composant/Rappoort/AjouterRapport2.jsx'
 
 //import reactLogo from '../assets/react.svg'
 import reactLogo from "../../assets/react.svg";
@@ -13,7 +14,7 @@ function Rapports(){
     const { state } = useLocation();
     const [visiteur , setVisiteur]= useState(state ? state.user : null);
     const {dataVisiteur, setDataVisiteur} = useOutletContext(visiteur);
-    const [affichage, setAffichage] = useState('AjouterRapport');
+    const [affichage, setAffichage] = useState('AjouterRapport2');
     return (
         <>
             
@@ -21,7 +22,7 @@ function Rapports(){
                 <ul className ="flex border-b">
                 <li className="-mb-px mr-l">
                 <Link 
-                    to="/Rapports/${medecin.id}/ajouter" // Utilisation de Link pour la navigation
+                    to="/Rapports/${medecin.id}/ajouter2" // Utilisation de Link pour la navigation
                     className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
                 >
                     Ajouter un rapport
@@ -39,8 +40,8 @@ function Rapports(){
 
             </div>
             {
-                affichage =='AjouterRapport'?
-                <AjouterRapport visiteur={visiteur} />
+                affichage =='AjouterRapport2'?
+                <AjouterRapport2 visiteur={visiteur} />
                 :
                 <ModifierRapport visiteur={visiteur}/>
                 }

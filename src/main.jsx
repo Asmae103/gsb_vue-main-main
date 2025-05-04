@@ -8,6 +8,7 @@ import App from './index/index.jsx'
 import './index.css'
 import FicheMedecin from './composant/fichemedecin.jsx'
 import AjouterRapport from './composant/Rappoort/AjouterRapport.jsx'
+import AjouterRapport2 from './composant/Rappoort/AjouterRapport2.jsx'
 import ModifierRapport from './composant/Rappoort/ModifierRapport.jsx'
 /*
 const NotFound = () =>{
@@ -38,9 +39,13 @@ const router = createBrowserRouter([
         path: 'Rapports',
         element: <Rapports />,
         children:[
-          {
+         /* {
             path: ':id/ajouter',
             element: <AjouterRapport />
+          },*/
+          {
+            path: ':id/ajouter2',
+            element: <AjouterRapport2 />
           },
           {
             path: ':id/modifier',
