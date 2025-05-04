@@ -7,7 +7,8 @@ import Rapports from './pages/accueil/Rapports.jsx'
 import App from './index/index.jsx'
 import './index.css'
 import FicheMedecin from './composant/fichemedecin.jsx'
-
+import AjouterRapport from './composant/Rappoort/AjouterRapport.jsx'
+import ModifierRapport from './composant/Rappoort/ModifierRapport.jsx'
 /*
 const NotFound = () =>{
   return <h1> Page non trouvable</h1>
@@ -35,7 +36,17 @@ const router = createBrowserRouter([
       },
       {
         path: 'Rapports',
-        element: <Rapports />
+        element: <Rapports />,
+        children:[
+          {
+            path: ':id/ajouter',
+            element: <AjouterRapport />
+          },
+          {
+            path: ':id/modifier',
+            element: <ModifierRapport />
+          },
+        ]
       },
 
      ]

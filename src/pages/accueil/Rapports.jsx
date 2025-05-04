@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { useNavigate, useLocation, useOutletContext} from 'react-router-dom'
+import { useNavigate, useLocation, useOutletContext, Link, Outlet} from 'react-router-dom'
+import AjouterRapport from '../../composant/Rappoort/AjouterRapport.jsx'
+
 //import reactLogo from '../assets/react.svg'
 import reactLogo from "../../assets/react.svg";
 import viteLogo from '/vite.svg'
@@ -11,9 +13,49 @@ function Rapports(){
     const { state } = useLocation();
     const [visiteur , setVisiteur]= useState(state ? state.user : null);
     const {dataVisiteur, setDataVisiteur} = useOutletContext(visiteur);
-  
+    const [affichage, setAffichage] = useState('AjouterRapport');
     return (
-     <>
+        <>
+            
+            <div className = " flex min-h-full flex-col justify-left px-6 py-12 lg:px-8"> 
+                <ul className ="flex border-b">
+                <li className="-mb-px mr-l">
+                <Link 
+                    to="/Rapports/${medecin.id}/ajouter" // Utilisation de Link pour la navigation
+                    className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
+                >
+                    Ajouter un rapport
+                </Link>
+                </li>
+                <li className="mr-1">
+                    <a className="bg-white inline-block py-2 px-4 text-blue-500 hover: text-blue-800 font-semibold"
+                    href="#" onClick={()=> setAffichage('ModifierRapport')}> 
+                    Modifier un rapport
+                    </a>
+
+                </li>
+                </ul>
+                <br/> 
+
+            </div>
+            {
+                affichage =='AjouterRapport'?
+                <AjouterRapport visiteur={visiteur} />
+                :
+                <ModifierRapport visiteur={visiteur}/>
+                }
+            <Outlet context={[visiteur, setVisiteur]}/>
+            </>
+            
+    )
+
+
+
+}
+export default Rapports;
+/* <p> {visiteur}</p>
+
+  <>
      <p>pages des rapports {visiteur}</p>
      <ul>
        <li>0 : { dataVisiteur.id }</li> 
@@ -31,14 +73,13 @@ function Rapports(){
     </ul>
 
      </>
-    )
-
-
-
-}
-export default Rapports;
-/* <p> {visiteur}</p>
-
-
 
 */
+
+/* 
+                {
+                affichage =='AjouterRapport'?
+                <AjouterRapport />
+                :
+                <ModifierRapport />
+                }*/

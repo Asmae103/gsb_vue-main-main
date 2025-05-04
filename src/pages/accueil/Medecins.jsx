@@ -7,7 +7,7 @@ import api from '../../api/api.jsx';
 import FicheMedecin from '../../composant/fichemedecin.jsx';
 //import FicheMedecin 
 
-function Medecins() {
+function Medecins({onSelect}) {  //onSelect pour selection medecin dans rapport
    const { state } = useLocation();
    //const [medecin, setMedecin] = useState(state ? state.user : null);
    const [medecins, setMedecins] = useState({});
@@ -18,24 +18,13 @@ function Medecins() {
    const [listeMedecins, setListeMedecins] = useState([]); //liste qui va contenir les medecins trouvés
    const [version, setVersion] = useState(0); //etat qui permet de forcer le rafraichissement du contenu
 
-   /* function charger(e) {
-     const valeursaisie = e.target.value;
-     setNomMedecin(valeursaisie);
-     if (medecin?.nom === valeursaisie) {
-        return medecin.nom + medecin.prenom;
-     }*/
-   /*
-       if(nomMedecin != null){
-           if(medecin.nom== nomMedecin){
-              return medecin.nom + medecin.prenom;
-            }*/
    function charger(e) {
       const valeursaisie = e.target.value;   // Récupérer la saisie de l'utilisateur
       setNomMedecin(valeursaisie);
       searchMedecin(valeursaisie).then((response) => {
          console.log("Données reçues de l'API :", response.data);
          setListeMedecins(response.data);
-         // setMedecins(response.data || []);( // ✅ On s'assure que c'est toujours un tableau
+         // setMedecins(response.data || []);( //  On s'assure que c'est toujours un tableau
          setListeVisible(true);
       })
      
@@ -63,13 +52,26 @@ function Medecins() {
    function selectMedecin(leMedecin) {
       console.log(leMedecin.nom);
       setMedecins(leMedecin);
-      setNomMedecin(leMedecin.nom + leMedecin.prenom);
+      setNomMedecin(leMedecin.nom +" " + leMedecin.prenom);
       if (medecins) { // ou medecin ===true  ; === compare les valeurs et les types
          setListeVisible(false);
       }
 
       setVersion(version + 1)
       navigate('' + leMedecin.id)
+      //navigate(`/Medecins/${leMedecin.id}/ajouter`);
+      /*if(choixnav){
+         navigate(`/Medecins/${leMedecin.id}/ajouter`);
+      }else{
+         navigate('' + leMedecin.id);
+      }*/
+       // navigation conditionnelle
+   /* if (location.pathname.startsWith('/Accueil/Rapports')) {
+      navigate(`/Accueil/Rapports/${leMedecin.id}/ajouter`);
+    } else if (location.pathname.startsWith('Accueil/Medecins')) {
+      navigate(`/Accueil/Medecins/${leMedecin.id}`);
+    }*/
+      onSelect(leMedecin);
       return leMedecin;
    }
 
@@ -82,21 +84,12 @@ function Medecins() {
    
    
    }
-      /**
-       * Appel à l'API /medecins, avec comme paramètre 'nom'
-       * retour en fonction de la saisie de l'utilisateur
-       * @returns
+     
        */
 
 
 
-   async function RechercherRapports() {
-
-
-
-
-
-   }
+   
    return (
       <>
 
