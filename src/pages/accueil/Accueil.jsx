@@ -37,7 +37,7 @@ function Accueil() {
     <Navbar />
     <p> Bonjour, {nom} {prenom}  </p>
     
-    <Outlet context={{dataVisiteur, setDataVisiteur}}/>
+    <Outlet context={[dataVisiteur, setDataVisiteur]} />
  
        </>
   )

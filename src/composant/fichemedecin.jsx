@@ -104,7 +104,7 @@ function Fiche({leMedecin}){
         </li>
         <li>
           <label name ="specialitecomplementaire" type ="text" id="specialitecomplementaire">specialitecomplementaire: </label><br/>
-          <input name ="specialitecomplementaire" type="text" id="specialitecomplementaire"  value ={medecin.specialitecomplementaire|| ''} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
+          <input name ="specialitecomplementaire" type="text" id="specialite"  value ={medecin.specialitecomplementaire|| ''} onChange ={ updatemedecin} style={{   border: '1px solid #919191',
             borderRadius: '6px', width: '100%'}}/>
         </li>
         <li>

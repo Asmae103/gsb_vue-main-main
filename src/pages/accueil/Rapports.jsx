@@ -10,11 +10,12 @@ import viteLogo from '/vite.svg'
 import "./Rapports.css";
 import Navbar from "../../composant/Navbar.jsx"; 
 //import Navbar from '../composant/Navbar.jsx'
-function Rapports(){
-    const { state } = useLocation();
-    const [visiteur , setVisiteur]= useState(state ? state.user : null);
-    const {dataVisiteur, setDataVisiteur} = useOutletContext(visiteur);
+function Rapports() {
+    // const { state } = useLocation();
+    // const [visiteur , setVisiteur]= useState(state ? state.user : null);
+    const [dataVisiteur, setDataVisiteur] = useOutletContext();
     const [affichage, setAffichage] = useState('AjouterRapport2');
+    console.log("vis", dataVisiteur);
     return (
         <>
             
@@ -22,7 +23,7 @@ function Rapports(){
                 <ul className ="flex border-b">
                 <li className="-mb-px mr-l">
                 <Link 
-                    to="/Rapports/${medecin.id}/ajouter2" // Utilisation de Link pour la navigation
+                    to="/Accueil/Rapports/${medecin.id}/ajouter2" // Utilisation de Link pour la navigation
                     className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
                 >
                     Ajouter un rapport
@@ -41,17 +42,17 @@ function Rapports(){
             </div>
             {
                 affichage =='AjouterRapport2'?
-                <AjouterRapport2 visiteur={visiteur} />
+                <AjouterRapport2 visiteur={dataVisiteur} />
                 :
-                <ModifierRapport visiteur={visiteur}/>
+                <ModifierRapport visiteur={dataVisiteur}/>
                 }
-            <Outlet context={[visiteur, setVisiteur]}/>
+            
             </>
             
     )
 
 
-
+//<Outlet context={[dataVisiteur, setVisiteur]}/>
 }
 export default Rapports;
 /* <p> {visiteur}</p>
