@@ -3,7 +3,8 @@ import api from "../../api/api.jsx";
 import '../../index/index1.css'
 
 export default function ModifierRapport({visiteur}) {
-  //  const[medecin,setMedecin]= useState({});
+   const[medecin,setMedecin]= useState({});
+   const[rapport, setRapport]= useState({});
     const[date, setDate]= useState(); //Date de rapport recherché
     const[listVisible, setListVisible] =useState(false); //etat visible de la liste 
     const[listRapports, setListRapports] = useState([]); //etat qui va contenir la liste des rapports
@@ -65,22 +66,27 @@ export default function ModifierRapport({visiteur}) {
           chargerRapports();
         }
       }, [date]);
+      function modifier(e){
+        const { name , value} = e.target;
+        setRapport( prev => ({
+          ...prev,
+         [name]: value
+    
+         //  [ name ]: name === 'departement' ? parseInt(value) : value
+        }) 
+        )
+      }
       /**
        * Fonction appeler lorsque le visiteur va valider la modification du rapport
        */
       function modifierRapport(e){
-        const { name , value} = e.target;
-            setMedecin( prev => ({
-              ...prev,
-             [name]: value
-        
-             //  [ name ]: name === 'departement' ? parseInt(value) : value
-            }) 
-            )
-        modifierRapportBase(rapport.id , motif , bilan).then((response)=>{
-            
-            setMajRapportSuccess("mise à jour effectué");
-        })
+        e.preventDefault();
+       
+        modifierRapportBase(rapport.id , motif , bilan)
+            .then((response)=>{
+                setMajRapportSuccess("mise à jour effectué");
+            })
+            .catch(() => setErreur("Erreur lors de la mise à jour"));
 
       }
       /**
@@ -90,15 +96,26 @@ export default function ModifierRapport({visiteur}) {
        * paramètres : idRapport, motif et bilan
        * @returns response - Variable au format JSON
        */
-      async function modifierRapportBase(params){
-         const response= await api.put('/majRapports', {params: { idRapport, motif , bilan}})
-         return response;
+      async function modifierRapportBase(idRapport, motif , bilan){
+        try{
+            const response= await api.put('/majRapports', {idRapport, motif , bilan})
+            return response;
+            console.log(response);
+        }catch(e){
+            console.log("erreur",e);
+        }
+        
+      }
+      function selectionnerRapport(rapport) {
+        console.log("rapport",rapport);
+        setRapport(rapport); // on garde le rapport sélectionné
+        setMedecin({nom: rapport.nomMedecin, prenom: rapport.prenomMedecin }); // pour déclencher l'affichage du formulaire
       }
     return(
         <>
-        {!medecin.id && (
+        {!rapport.idRapport && (
             <div>
-                <p>ppppppppppppppp</p>
+               
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">Rechercher un médecin</legend>
                     <input type="date" className="input" value={date} onChange={(e) => setDate(e.target.value)}/>
@@ -124,7 +141,7 @@ export default function ModifierRapport({visiteur}) {
                         </thead>
                         <tbody>
                         {listRapports.map((rapport,index)=>(
-                            <tr key ={index}  onClick={() => chargerRapports()} >
+                            <tr key ={index}  onClick={() => selectionnerRapport(rapport)} >
                             <td> {rapport.idRapport} </td> 
                             <td>{rapport.motif}</td>
                             <td>{rapport.bilan}</td>
@@ -138,31 +155,37 @@ export default function ModifierRapport({visiteur}) {
             }
            </div>
         )}
-         {medecin.id &&(
+         {rapport.idRapport &&(
                 <div>
                         <p> Modifier le rapport pour le medecin: {rapport.nomMedecin} {rapport.prenomMedecin} </p>
                     
-                    <form onSubmit={modifierRapportBase}> 
+                    <form onSubmit={modifierRapport}> 
                         <div>
                         <li>
                         <label name ="motif" type ="text" id="motif">Motif: </label><br/>
-                        <input name ="motif" type="text" id="motif" value ={rapport.motif}   onChange={modifierRapport}style={{   border: '1px solid #919191',
+                        <input name ="motif" type="text" id="motif" value ={rapport.motif}   onChange={modifier}style={{   border: '1px solid #919191',
                             borderRadius: '6px', width: '100%'}}/>
                         </li>
                         <li>
                         <label name ="bilan" type ="text" id="bilan">Bilan: </label><br/>
-                        <textarea name ="bilan"  id="bilan" value ={rapport.bilan}  onChange={modifierRapport} style={{   border: '1px solid #919191',
+                        <textarea name ="bilan"  id="bilan" value ={rapport.bilan}  onChange={modifier} style={{   border: '1px solid #919191',
                             borderRadius: '6px', width: '100%'}}> </textarea>
                         </li> 
                         </div>
-                        <button type = "submit" style ={{width: 'auto', backgroundColor:'rgb(29 78 216)', color:'#fff'}}>Ajouter le rapport </button>
-                     {
-                        majRapportSuccess &&(
-                            <div id="bmaj">
-                                <p>{majRapportSuccess}</p>
-                             </div>
-                        )
-                     }
+                        <button type = "submit" style ={{width: 'auto', backgroundColor:'rgb(29 78 216)', color:'#fff'}}>Modifier le rapport </button>
+                        {
+                            majRapportSuccess &&(
+                                <div id="bmaj">
+                                    <p>{majRapportSuccess}</p>
+                                </div>
+                            )
+                        }
+                        {erreur&&(
+                            <div id="bnerr">  
+                                <p > {erreur}</p>
+                            </div>
+                            )
+                        }
                     </form>
                 </div>
                )}
