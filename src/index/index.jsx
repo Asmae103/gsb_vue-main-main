@@ -68,10 +68,8 @@ function App() {
         <img src="src/index/a.png" />
         {erMessage && ( 
         <div id="bnerr">  
-                 <p > {erMessage}</p>
-            
-           
-          </div>
+           <p > {erMessage}</p>
+        </div>
         )}
         <div>
       

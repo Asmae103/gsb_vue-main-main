@@ -101,7 +101,8 @@ export default function AjouterRapport2 ({visiteur}){
      * @returns Promesse Axios
      */
     async function ajouterRapportBase(params){
-        try{const response = await api.put('/ajouterRapport', params);
+        try{
+            const response = await api.put('/ajouterRapport', params);
             return response;
         }catch(error){
             console.log("Erreur lors de l'envoie d'un rapport" + error);

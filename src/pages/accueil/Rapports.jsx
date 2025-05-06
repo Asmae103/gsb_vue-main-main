@@ -1,21 +1,31 @@
-import { useState } from 'react'
+import { useState , useEffect} from 'react'
 import { useNavigate, useLocation, useOutletContext, Link, Outlet} from 'react-router-dom'
 import AjouterRapport from '../../composant/Rappoort/AjouterRapport.jsx'
 import AjouterRapport2 from '../../composant/Rappoort/AjouterRapport2.jsx'
+import ModifierRapport from '../../composant/Rappoort/ModifierRapport.jsx';
 
-//import reactLogo from '../assets/react.svg'
+
 import reactLogo from "../../assets/react.svg";
 import viteLogo from '/vite.svg'
-//import '../composant/accueil/Rapports.css'
 import "./Rapports.css";
 import Navbar from "../../composant/Navbar.jsx"; 
-//import Navbar from '../composant/Navbar.jsx'
+
 function Rapports() {
-    // const { state } = useLocation();
+     const location = useLocation();
     // const [visiteur , setVisiteur]= useState(state ? state.user : null);
     const [dataVisiteur, setDataVisiteur] = useOutletContext();
     const [affichage, setAffichage] = useState('AjouterRapport2');
     console.log("vis", dataVisiteur);
+
+    
+    useEffect(() => {
+        if (location.pathname.includes('/ajouter2')) {
+          setAffichage('AjouterRapport2');
+        } else if (location.pathname.includes('/modifier')) {
+          setAffichage('ModifierRapport');
+        }
+      }, [location]);
+    
     return (
         <>
             
@@ -23,18 +33,19 @@ function Rapports() {
                 <ul className ="flex border-b">
                 <li className="-mb-px mr-l">
                 <Link 
-                    to="/Accueil/Rapports/${medecin.id}/ajouter2" // Utilisation de Link pour la navigation
+                    to='/Accueil/Rapports/${medecin.id}/ajouter2' // Utilisation de Link pour la navigation
                     className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
                 >
                     Ajouter un rapport
                 </Link>
                 </li>
                 <li className="mr-1">
-                    <a className="bg-white inline-block py-2 px-4 text-blue-500 hover: text-blue-800 font-semibold"
-                    href="#" onClick={()=> setAffichage('ModifierRapport')}> 
+                <Link 
+                    to={'/Accueil/Rapports/${medecin.id}/modifier' }// Utilisation de Link pour la navigation
+                    className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
+                >
                     Modifier un rapport
-                    </a>
-
+                </Link>
                 </li>
                 </ul>
                 <br/> 

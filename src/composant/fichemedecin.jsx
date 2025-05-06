@@ -179,7 +179,7 @@ function Rapports ({idMedecin}){
           <tbody>
           {rapportsMedecin.map((rapport,index)=>(
             <tr key ={index}>
-              <td> {new Date(rapport.date).toLocaleDateString()} </td>
+              <td> {new Date(rapport.date).toLocaleDateString()} </td> {/*convertir un objet Date en une chaîne de caractères*/}
               <td>{rapport.motif}</td>
               <td>{rapport.bilan}</td>
               <td>{rapport.nom} {rapport.prenom}</td>
