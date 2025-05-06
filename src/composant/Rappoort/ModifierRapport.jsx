@@ -82,7 +82,7 @@ export default function ModifierRapport({visiteur}) {
       function modifierRapport(e){
         e.preventDefault();
        
-        modifierRapportBase(rapport.id , motif , bilan)
+        modifierRapportBase(rapport)
             .then((response)=>{
                 setMajRapportSuccess("mise à jour effectué");
             })
@@ -96,9 +96,9 @@ export default function ModifierRapport({visiteur}) {
        * paramètres : idRapport, motif et bilan
        * @returns response - Variable au format JSON
        */
-      async function modifierRapportBase(idRapport, motif , bilan){
+      async function modifierRapportBase(rapport){//idRapport, motif , bilan
         try{
-            const response= await api.put('/majRapports', {idRapport, motif , bilan})
+            const response= await api.put('/majRapports', rapport)
             return response;
             console.log(response);
         }catch(e){
