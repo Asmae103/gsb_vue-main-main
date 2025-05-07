@@ -9,8 +9,10 @@ export default function ModifierRapport({visiteur}) {
     const[listVisible, setListVisible] =useState(false); //etat visible de la liste 
     const[listRapports, setListRapports] = useState([]); //etat qui va contenir la liste des rapports
     const[majRapportSuccess, setMajRapportSuccess] = useState(); //etat qui va vérifier si le rapport à bien été modifier 
+    const[supRapportSuccess, setSupRapportSuccess] = useState();//etat qui va vérifier si le rapport à bien été supprimer
     const[erreur, setErreur]= useState("");
-
+    const[erreurR, setErreurR]= useState("");
+    
     /**
      * Fonction appelé lorsque le visiteur va saisir la date du (ou des)
      * rapports à rechercher
@@ -111,6 +113,44 @@ export default function ModifierRapport({visiteur}) {
         setRapport(rapport); // on garde le rapport sélectionné
         setMedecin({nom: rapport.nomMedecin, prenom: rapport.prenomMedecin }); // pour déclencher l'affichage du formulaire
       }
+
+      function deleteRapport(e){
+        e.preventDefault();
+        console.log("rapport :", rapport); 
+       
+      console.log(`Demande de suppression du rapport ${rapport.idRapport}`)
+        if(confirm(`Supprimer le rapport  ${rapport.idRapport} ?`)){
+          
+            deleteRapportBase(rapport)
+            .then((response)=>{
+                setSupRapportSuccess(" Rapport Supprimer");
+            })
+            .catch(() => setErreurR("Erreur lors de la suppression"));
+        //}
+    }
+
+        
+    /*  }else{
+        console.log("rapport.id est undefined !");
+    setErreurR("Aucun rapport sélectionné");
+    }*/
+    }
+      /**
+       * @returns response - Variable au format JSON
+       */
+      async function  deleteRapportBase(rapport){
+        try{
+         const response = await api.delete(`/supprimerRapport/${rapport.idRapport}`);
+            console.log(response);
+           
+            return response;
+           
+        }catch(e){
+            console.log("erreur à l'envoie à l'API",e);
+        }
+        
+      }
+     
     return(
         <>
         {!rapport.idRapport && (
@@ -185,6 +225,13 @@ export default function ModifierRapport({visiteur}) {
                                 <p > {erreur}</p>
                             </div>
                             )
+                        }<br></br>
+                         <button type = "submit" onClick={deleteRapport} style ={{width: 'auto', backgroundColor:'rgb(29 78 216)', color:'#fff'}}>Supprimmer le rapport </button>
+                         {supRapportSuccess&&(
+                            <div id="bmaj">  
+                                <p > {supRapportSuccess}</p>
+                            </div>
+                            )
                         }
                     </form>
                 </div>
@@ -192,10 +239,3 @@ export default function ModifierRapport({visiteur}) {
         </>
     )
 }
-/*
- <fieldset className="fieldset">
-            <legend className="fieldset-legend">What is your name?</legend>
-            <input type="text" className="input" placeholder="Type here" />
-            <p className="label">Optional</p>
-            </fieldset>
-*/

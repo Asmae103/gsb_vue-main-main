@@ -5,7 +5,7 @@ import './Medecins.css';
 import Accueil from './Accueil.jsx';
 import api from '../../api/api.jsx';
 import FicheMedecin from '../../composant/fichemedecin.jsx';
-//import FicheMedecin 
+
 
 function Medecins({onSelect}) {  //onSelect pour selection medecin dans rapport
    const { state } = useLocation();
@@ -59,18 +59,6 @@ function Medecins({onSelect}) {  //onSelect pour selection medecin dans rapport
 
       setVersion(version + 1)
       navigate('' + leMedecin.id)
-      //navigate(`/Medecins/${leMedecin.id}/ajouter`);
-      /*if(choixnav){
-         navigate(`/Medecins/${leMedecin.id}/ajouter`);
-      }else{
-         navigate('' + leMedecin.id);
-      }*/
-       // navigation conditionnelle
-   /* if (location.pathname.startsWith('/Accueil/Rapports')) {
-      navigate(`/Accueil/Rapports/${leMedecin.id}/ajouter`);
-    } else if (location.pathname.startsWith('Accueil/Medecins')) {
-      navigate(`/Accueil/Medecins/${leMedecin.id}`);
-    }*/
       onSelect(leMedecin);
       return leMedecin;
    }
@@ -78,16 +66,10 @@ function Medecins({onSelect}) {  //onSelect pour selection medecin dans rapport
 
    /*useEffect(()=> { charger();
      setVersion((prev) => prev + 1); // Force le rafraîchissement  prev représente la valeur actuelle de version, et on retourne prev + 1 pour l’incrémenter.
-   }, [nomMedecin]); // Déclenche le useEffect lorsque nomMedecin change);
-   
-   
-   
-   
-   }
+      }, [nomMedecin]); // Déclenche le useEffect lorsque nomMedecin change);
+      }
      
-       */
-
-
+   */
 
    
    return (
@@ -146,13 +128,5 @@ function Medecins({onSelect}) {  //onSelect pour selection medecin dans rapport
 export default Medecins;
 
 
-//        <input  type ="text"  value={(nomMedecin)}  onChange= {charger} />
-/*<ul>
-{listeVisible && listeMedecins.map(medecin =>
-<li key={medecin.id}
-  onClick = { () => selectMedecin(medecin) } >
-  { medecin.nom } {medecin.prenom}
-</li>
-)}
-</ul>*/
+
 

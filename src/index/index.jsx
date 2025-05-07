@@ -38,10 +38,6 @@ function App() {
     const form = new FormData(e.currentTarget); //
 
     if (login && password) {
-      // console.log(response.data);
-      //  console.log("Connexion reussie");
-        //getVisiteur(login, password)
-        //console.log(form.get("password"))
         getVisiteur(form.get("login"), form.get("password")).then((response) => {
           //console.log(response);
           if (response.data != null) {
@@ -61,7 +57,7 @@ function App() {
     }  
 
   }
-//    {(error === true) ? <window.alert title="Impossible de se connecter !" /> : null}
+
   return (
     <>
       <form id="myForm" name="myForm" onSubmit={connexion}>
@@ -101,24 +97,3 @@ function App() {
 }
 
 export default App
-/* <button id="btn" type="Submit" 
-        onClick={() => 
-          navigate("/getVisiteur",{
-            params: {
-            login ,
-            password 
-          }
-        })
-        }
-          >
-          Sign in 
-        </button>*/
-
-
-/*  <button id="btn" type="Submit"
-  onClick={(e) => {
-    connexion(e);
-  }}
-    >
-    Sign in 
-  </button>*/
